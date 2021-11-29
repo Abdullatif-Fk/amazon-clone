@@ -15,11 +15,15 @@
   height: 100px;
   margin-bottom: 15px;
 }
+.product__info > p {
+  color: red;
+}
 .product__price {
   margin-top: 5px;
 }
 .product__rating {
   display: flex;
+  margin-bottom: 15px;
 }
 .product > img {
   max-height: 200px;
