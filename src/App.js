@@ -2,14 +2,13 @@ import "./App.css";
 import Home from "./Pages/Home/Home";
 import Checkout from "./Pages/Checkout/Checkout";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header/Header";
 import Login from "./Pages/Login/Login";
 import { useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useStateValue } from "./StateProvider";
 function App() {
-  const [{}, dispatch] = useStateValue();
+  const [, dispatch] = useStateValue();
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       console.log(user);
@@ -28,7 +27,7 @@ function App() {
         });
       }
     });
-  }, []);
+  }, [dispatch]);
   //BEM convention
   return (
     <div className="app">

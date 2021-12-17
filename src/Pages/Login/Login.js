@@ -21,7 +21,7 @@ function Login() {
         }
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorMessage);
       });
@@ -37,7 +37,7 @@ function Login() {
         console.log(user);
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorMessage);
       });
@@ -46,7 +46,7 @@ function Login() {
   return (
     <div className="login">
       <Link to="/">
-        <img className="login__logo" src="images/logo2.jpg" />
+        <img className="login__logo" alt="" src="images/logo2.jpg" />
       </Link>
       <div className="login__container">
         <h1>Sign-in</h1>
