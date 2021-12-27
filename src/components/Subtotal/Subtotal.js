@@ -6,7 +6,16 @@ import { useStateValue } from "../../StateProvider";
 import "./Subtotal.css";
 function Subtotal() {
   const navigate = useNavigate();
-  const [{ basket }] = useStateValue();
+  const [{ basket, user }] = useStateValue();
+  const checkoutHandle = () => {
+    if (user && basket.length > 0) {
+      navigate("/payment");
+    } else if (!user) {
+      alert("You should sign in before");
+    } else {
+      alert("You should chouse one product minimum");
+    }
+  };
   return (
     <div className="subtotal">
       <CurrencyFormat
@@ -28,7 +37,7 @@ function Subtotal() {
         thousandSeparator={true}
         prefix={"$"}
       />
-      <button onClick={(e) => navigate("/payment")}>Proceed to Checkout</button>
+      <button onClick={checkoutHandle}>Proceed to Checkout</button>
     </div>
   );
 }

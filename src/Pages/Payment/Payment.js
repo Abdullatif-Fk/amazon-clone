@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../StateProvider";
 import CheckoutProduct from "../../components/CheckoutProduct/CheckoutProduct";
-
 import "./Payment.css";
 import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
 import { getBaskeTotal } from "../../reducer";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../axios";
-// import { axios } from "../../axios";
+import { db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+
 function Payment() {
   const navigate = useNavigate();
 
   const [{ basket, user }, dispatch] = useStateValue();
   const stripe = useStripe();
   const elements = useElements();
-
+  // console.log(user);
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [processing, setProcessing] = useState("");
   const [succeeded, setSucceeded] = useState(false);
   const [clientSecret, setClientSecret] = useState(true);
-
+  const addingOrders = async (paymentIntent) => {
+    await setDoc(
+      doc(db, "users", `${user?.uid}`, "orders", `${paymentIntent.id}`),
+      {
+        basket: basket,
+        amount: paymentIntent.amount,
+        created: paymentIntent.created,
+      }
+    );
+  };
   useEffect(() => {
     //genrate the special stripe secret wich allows us to charge a customer
     const getClientSecret = async () => {
@@ -33,7 +43,7 @@ function Payment() {
     };
     getClientSecret();
   }, [basket]);
-  console.log("THE SECRET :", clientSecret);
+  // console.log("THE SECRET :", clientSecret);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,10 +57,19 @@ function Payment() {
       })
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
+        addingOrders(paymentIntent);
+
         setSucceeded(true);
         setError(null);
         setProcessing(false);
-        navigate("/orders");
+        dispatch({
+          type: "EMPTY_BASKET",
+        });
+        if (user && basket.length > 0) {
+          navigate("/orders");
+        } else {
+          alert("You should sign in before");
+        }
       });
   };
   const handleChange = (e) => {
