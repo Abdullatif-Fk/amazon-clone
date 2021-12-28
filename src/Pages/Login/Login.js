@@ -18,6 +18,7 @@ function Login() {
         const user = userCredential.user;
         if (user) {
           navigate("/");
+          localStorage.setItem("token", user.accessToken);
         }
       })
       .catch((error) => {

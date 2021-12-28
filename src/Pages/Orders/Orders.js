@@ -9,6 +9,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
 } from "firebase/firestore";
 
 import { useStateValue } from "../../StateProvider";
@@ -17,6 +18,7 @@ import "./Orders.css";
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [{ user }, dispatch] = useStateValue();
+  const [docs, setDocs] = useState([]);
   useEffect(() => {
     if (user) {
       onSnapshot(
@@ -25,7 +27,8 @@ function Orders() {
           orderBy("created", "desc")
         ),
         (doc) => {
-          doc.docs.map((item) => {
+          setDocs(doc.docs);
+          docs?.map((item) => {
             orders.push({ userId: user?.uid, id: item.id, data: item.data() });
           });
         }
